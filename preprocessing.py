@@ -1,5 +1,5 @@
 import json
-from nltk.tokenize import sent_tokenize
+from nltk.tokenize import sent_tokenize, word_tokenize
 
 def get_data(file_path):
     reviews = []
@@ -27,23 +27,28 @@ def get_data(file_path):
 
     return reviews, ratings
 
-def tokenize_reviews(reviews):
+def get_tokenized_reviews(reviews, byWord=False):
     reviews_tokenized = []
-    for review in reviews:
-        reviews_tokenized.append(sent_tokenize(review))
+    
+    for review in reviews:    
+        #Tokenize by sentence or word based on bool
+        if byWord:
+            reviews_tokenized.append(word_tokenize(review))
+        else:
+            reviews_tokenized.append(sent_tokenize(review))
 
     return reviews_tokenized
 
-def main():
-    reviews, ratings = get_data('./yelp_dataset/review.json')
+#def main():
+#    reviews, ratings = get_data('./yelp_dataset/review.json')
 
     # To get sent_tokenize to work, In python terminal: 
     # >>> import nltk
     # >>> nltk.download('punkt')
 
-    reviews_tokenized = structure_data(reviews)
+#    reviews_tokenized = tokenize_reviews(reviews)
 
     #reviews, ratings = get_data('yelp_dataset/review.json')
 
-if __name__ == '__main__':
-    main()
+#if __name__ == '__main__':
+#    main()
