@@ -1,10 +1,16 @@
 import json
 import string
 import numpy as np
+# import nltk
+# nltk.download('stopwords')
 
 from nltk.tokenize import sent_tokenize, word_tokenize
+from nltk.corpus import stopwords
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
+
+stop_words = set(stopwords.words('english'))
+
 
 def get_data(file_path):
     reviews = []
@@ -18,7 +24,7 @@ def get_data(file_path):
             counter += 1
             item = json.loads(jsonObj)
             items.append(item)
-            if counter == 500:
+            if counter == 3000:
                 break
     for item in items:
         text = item["text"]
@@ -26,16 +32,23 @@ def get_data(file_path):
         reviews.append(text)
         stars = item["stars"]
         ratings.append(stars)
+    print(text)
     ratings = np.array(list(map(lambda x: 1 if x == 3.0 or x == 4.0 or x == 5.0 else 0, ratings))) #binary ratings
     return reviews, ratings
 
 def clean_review(review): #method that cleans a review by getting rid of punctuation and splitting on each word
+
     text = review.split()  # tokenizing the text, split by words
     table = str.maketrans('', '', string.punctuation)
     text = [w.translate(table) for w in text]  # gets rid of the punctuation
     # https://machinelearningmastery.com/develop-word-embedding-model-predicting-movie-review-sentiment/
     text = [word for word in text if word.isalpha()]
+    text = [t for t in text if not t in stop_words]
     text = ' '.join(text)
+
+
+    #print(text)
+
     return text
 
 def tokenize_with_keras(training, testing):
@@ -51,7 +64,8 @@ def tokenize_with_keras(training, testing):
 
 def embedding_matrix(vocab_size, tokenizer):
     embeddings_dictionary = dict()
-    glove_file = open('../glove.6B.100d.txt', encoding="utf8")
+
+    glove_file = open('glove.6B.100d.txt', encoding="utf8")
     for line in glove_file:
         records = line.split()
         word = records[0]
