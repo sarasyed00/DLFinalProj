@@ -1,8 +1,6 @@
 import json
 import string
 import numpy as np
-# import nltk
-# nltk.download('stopwords')
 
 from nltk.tokenize import sent_tokenize, word_tokenize
 from nltk.corpus import stopwords
@@ -45,26 +43,21 @@ def clean_review(review): #method that cleans a review by getting rid of punctua
     text = [word for word in text if word.isalpha()]
     text = [t for t in text if not t in stop_words]
     text = ' '.join(text)
-
-
-    #print(text)
-
     return text
 
 def tokenize_with_keras(training, testing):
-    tokenizer = Tokenizer(num_words = 5000) #look into what the propper num words is
+    tokenizer = Tokenizer(num_words = 5000)
     tokenizer.fit_on_texts(training)
     training = tokenizer.texts_to_sequences(training)
     testing = tokenizer.texts_to_sequences(testing)
     vocab_size = len(tokenizer.word_index) +1
-    length = 100 #we are cutting off our reviews at 100 words and padding them to be 100, we can change this later if we want
+    length = 100 #we are cutting off our reviews at 100 words and padding them to be 100
     training = pad_sequences(training, padding='post', maxlen=length)
     testing = pad_sequences(testing, padding='post', maxlen=length)
     return training, testing, vocab_size, tokenizer
 
 def embedding_matrix(vocab_size, tokenizer):
     embeddings_dictionary = dict()
-
     glove_file = open('glove.6B.100d.txt', encoding="utf8")
     for line in glove_file:
         records = line.split()
@@ -92,14 +85,6 @@ def get_tokenized_reviews(reviews, byWord=False):
 
 def main():
     reviews, ratings = get_data('review.json')
-    #tokenized_reviews = get_tokenized_reviews(reviews)
-    #print(reviews)
-
-    # To get sent_tokenize to work, In python terminal: 
-    # >>> import nltk
-    # >>> nltk.download('punkt')
-#    reviews_tokenized = tokenize_reviews(reviews)
-    #reviews, ratings = get_data('yelp_dataset/review.json')
-
+    
 if __name__ == '__main__':
     main()
