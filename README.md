@@ -1,4 +1,4 @@
-# DLFinalProj
+# Predicting Yelp Reviews Based on Sentiment of Text
 
 **How to Access dataset:**
 In order to access the yelp reviews dataset we used, download the set from this google drive link:
